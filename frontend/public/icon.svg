@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">FrameLens app icon</title>
+  <defs>
+    <linearGradient id="background" x1="74" x2="438" y1="54" y2="458" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7D5CFF" />
+      <stop offset="1" stop-color="#23D6C8" />
+    </linearGradient>
+    <linearGradient id="lens" x1="156" x2="356" y1="154" y2="358" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.96" />
+      <stop offset="1" stop-color="#DBF8FF" stop-opacity="0.78" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#080B13" />
+  <rect x="34" y="34" width="444" height="444" rx="94" fill="url(#background)" />
+  <rect x="105" y="132" width="302" height="238" rx="48" fill="#0C1222" fill-opacity="0.92" />
+  <path
+    d="M158 132l23-42c8-15 23-24 40-24h70c17 0 32 9 40 24l23 42"
+    fill="#0C1222"
+    fill-opacity="0.92"
+  />
+  <circle cx="256" cy="256" r="82" fill="url(#lens)" />
+  <circle cx="256" cy="256" r="52" fill="#0C1222" fill-opacity="0.82" />
+  <circle cx="276" cy="232" r="18" fill="#70E9FF" />
+  <rect x="154" y="174" width="92" height="118" rx="22" fill="#FFFFFF" fill-opacity="0.2" />
+  <path d="M164 271l34-38 20 25 18-18 22 31" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" />
+</svg>
