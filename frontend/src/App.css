@@ -1,58 +1,419 @@
-.seperator {
-  height: 1px;
-  background-color: #fff;
-  margin: 0 24px;
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(320px, 1.15fr);
+  gap: 28px;
+  min-height: 100vh;
+  padding: 32px;
 }
 
-.main {
+.hero-panel,
+.camera-panel {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 32px;
+  background: rgba(12, 18, 34, 0.82);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+}
+
+.hero-panel {
+  align-self: stretch;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  padding: 0px 40px;
-  flex: 1;
-}
-
-.main .todo {
-  background-color: #fffffe;
-  min-height: 400px;
-  width: 60%;
-  border-radius: 6px;
-  padding: 16px;
-  color: #000;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.main .todo .todo-input {
-  padding-left: 16px;
-  width: 100%;
-  min-height: 40px;
-  background-color: #7f5af0;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-
-.main .todo .todo-input input {
-  background-color: transparent;
-  border: none;
-  outline: none;
-  padding: 0 16px;
-  resize: none;
-  color: #fff;
-  flex: 1;
-}
-
-.main .todo .todo-input .add {
-  width: 50px;
-  border-left: 2px solid white;
-  display: flex;
   justify-content: center;
-  align-items: center;
-  cursor: pointer;
+  padding: 40px;
 }
 
+.eyebrow {
+  width: fit-content;
+  margin: 0 0 18px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(125, 92, 255, 0.16);
+  color: #b7a8ff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
 
+.hero-panel h1 {
+  max-width: 12ch;
+  margin: 0;
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  line-height: 0.88;
+  letter-spacing: -0.08em;
+}
+
+.hero-copy {
+  max-width: 620px;
+  margin: 28px 0 0;
+  color: #b9c4d8;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.action-row,
+.url-input-row,
+.camera-controls,
+.slider-row {
+  display: flex;
+  align-items: center;
+}
+
+.action-row {
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+button {
+  border: 0;
+  border-radius: 999px;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(112, 233, 255, 0.78);
+  outline-offset: 3px;
+}
+
+.primary-action,
+.secondary-action,
+.capture-button,
+.save-button {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.primary-action,
+.capture-button {
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #7d5cff, #23d6c8);
+}
+
+.secondary-action,
+.save-button,
+.url-input-row button,
+.camera-placeholder button {
+  padding: 13px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.url-import {
+  margin-top: 28px;
+}
+
+.url-import label {
+  display: block;
+  margin-bottom: 10px;
+  color: #dbe6f7;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.url-input-row {
+  gap: 10px;
+  width: 100%;
+  padding: 8px 8px 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #8dd9ff;
+}
+
+.url-input-row input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: #ffffff;
+  font: inherit;
+}
+
+.url-input-row input::placeholder {
+  color: #71809a;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.camera-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.camera-stage {
+  position: relative;
+  min-height: min(76vh, 760px);
+  overflow: hidden;
+  border-radius: 32px 32px 0 0;
+  background:
+    radial-gradient(circle at top, rgba(35, 214, 200, 0.24), transparent 36%),
+    #05070d;
+  touch-action: none;
+}
+
+.camera-feed {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: linear-gradient(160deg, rgba(8, 11, 19, 0.94), rgba(18, 23, 37, 0.88));
+  color: #c7d2e7;
+  text-align: center;
+}
+
+.camera-placeholder svg {
+  color: #70e9ff;
+  font-size: 3rem;
+}
+
+.reference-overlay {
+  position: absolute;
+  z-index: 2;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 22px;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.42);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.reference-overlay.is-active {
+  cursor: grabbing;
+}
+
+.reference-overlay img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.move-hint {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.54);
+  color: #ffffff;
+}
+
+.resize-handle {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, transparent 45%, rgba(255, 255, 255, 0.9) 46%, rgba(255, 255, 255, 0.9) 54%, transparent 55%),
+    rgba(0, 0, 0, 0.5);
+  cursor: nwse-resize;
+}
+
+.opacity-card {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  z-index: 4;
+  width: min(320px, calc(100% - 36px));
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 22px;
+  background: rgba(4, 8, 17, 0.78);
+  box-shadow: 0 16px 46px rgba(0, 0, 0, 0.36);
+  backdrop-filter: blur(18px);
+}
+
+.opacity-card label {
+  display: block;
+  margin-bottom: 10px;
+  color: #dce8f8;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.slider-row {
+  gap: 12px;
+}
+
+.slider-row input {
+  flex: 1;
+  accent-color: #23d6c8;
+}
+
+.slider-row span {
+  min-width: 44px;
+  color: #ffffff;
+  font-weight: 900;
+  text-align: right;
+}
+
+.camera-controls {
+  gap: 14px;
+  padding: 22px;
+  background: rgba(4, 8, 17, 0.72);
+}
+
+.camera-controls > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.reference-title,
+.reference-source,
+.reference-status,
+.capture-status {
+  margin: 0;
+}
+
+.reference-title {
+  overflow: hidden;
+  color: #ffffff;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reference-status,
+.capture-status {
+  margin-top: 4px;
+  color: #aab7ca;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.reference-source {
+  margin-top: 3px;
+  color: #70e9ff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.save-button {
+  padding-inline: 16px;
+}
+
+.capture-status {
+  padding: 0 22px 22px;
+  background: rgba(4, 8, 17, 0.72);
+}
+
+@media (max-width: 980px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+
+  .hero-panel {
+    padding: 28px;
+  }
+
+  .hero-panel h1 {
+    max-width: 14ch;
+  }
+
+  .camera-stage {
+    min-height: 68vh;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    gap: 16px;
+    padding: 12px;
+  }
+
+  .hero-panel,
+  .camera-panel {
+    border-radius: 24px;
+  }
+
+  .hero-panel {
+    padding: 22px;
+  }
+
+  .hero-panel h1 {
+    font-size: 3rem;
+    letter-spacing: -0.06em;
+  }
+
+  .action-row,
+  .camera-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .primary-action,
+  .secondary-action,
+  .capture-button,
+  .save-button {
+    width: 100%;
+  }
+
+  .url-input-row {
+    flex-wrap: wrap;
+  }
+
+  .url-input-row input {
+    flex-basis: calc(100% - 34px);
+  }
+
+  .url-input-row button {
+    width: 100%;
+  }
+
+  .camera-stage {
+    min-height: 74vh;
+    border-radius: 24px 24px 0 0;
+  }
+}
