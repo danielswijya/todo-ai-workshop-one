@@ -5,10 +5,7 @@
 html {
   min-height: 100%;
   width: 100%;
-  background:
-    radial-gradient(circle at 20% 10%, rgba(125, 92, 255, 0.3), transparent 26rem),
-    radial-gradient(circle at 90% 5%, rgba(35, 214, 200, 0.22), transparent 24rem),
-    #080b13;
+  background: #000000;
   color: #ffffff;
   font-family:
     Inter,
@@ -25,6 +22,8 @@ html {
 body {
   min-height: 100vh;
   width: 100%;
+  overflow: hidden;
+  background: #000000;
   margin: 0;
   padding: 0;
 }
