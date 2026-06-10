@@ -23,6 +23,7 @@ function App() {
     y: 18,
     width: 64,
     height: 54,
+    aspectRatio: 1,
   })
   const [interaction, setInteraction] = useState(null)
   const [showDeleteControl, setShowDeleteControl] = useState(false)
@@ -95,7 +96,7 @@ function App() {
     const stageRect = stageRef.current?.getBoundingClientRect()
 
     if (!stageRect || !naturalWidth || !naturalHeight) {
-      setOverlay({ x: 18, y: 18, width: 64, height: 54 })
+      setOverlay({ x: 18, y: 18, width: 64, height: 54, aspectRatio: 1 })
       return
     }
 
@@ -114,6 +115,7 @@ function App() {
       y: (100 - height) / 2,
       width,
       height,
+      aspectRatio: referenceAspect,
     })
   }, [])
 
@@ -149,7 +151,18 @@ function App() {
     const x = Math.min(Math.max(nextOverlay.x, 0), 100 - width)
     const y = Math.min(Math.max(nextOverlay.y, 0), 100 - height)
 
-    return { x, y, width, height }
+    return { ...nextOverlay, x, y, width, height }
+  }, [])
+
+  const clampAspectLockedOverlay = useCallback((nextOverlay, stageAspect) => {
+    const minWidth = Math.max(14, (14 * nextOverlay.aspectRatio) / stageAspect)
+    const maxWidth = Math.min(100, (100 * nextOverlay.aspectRatio) / stageAspect)
+    const width = Math.min(Math.max(nextOverlay.width, minWidth), maxWidth)
+    const height = (width * stageAspect) / nextOverlay.aspectRatio
+    const x = Math.min(Math.max(nextOverlay.x, 0), 100 - width)
+    const y = Math.min(Math.max(nextOverlay.y, 0), 100 - height)
+
+    return { ...nextOverlay, x, y, width, height }
   }, [])
 
   const beginOverlayInteraction = (event, mode) => {
@@ -187,12 +200,23 @@ function App() {
       }
 
       if (interaction.mode === 'resize') {
+        const startOverlay = interaction.startOverlay
+        const stageAspect = interaction.stageRect.width / interaction.stageRect.height
+        const widthDelta = dx
+        const heightDeltaAsWidth = (dy * startOverlay.aspectRatio) / stageAspect
+        const nextWidth =
+          startOverlay.width + (Math.abs(widthDelta) > Math.abs(heightDeltaAsWidth) ? widthDelta : heightDeltaAsWidth)
+        const nextHeight = (nextWidth * stageAspect) / startOverlay.aspectRatio
+
         setOverlay(
-          clampOverlay({
-            ...interaction.startOverlay,
-            width: interaction.startOverlay.width + dx,
-            height: interaction.startOverlay.height + dy,
-          }),
+          clampAspectLockedOverlay(
+            {
+              ...startOverlay,
+              width: nextWidth,
+              height: nextHeight,
+            },
+            stageAspect,
+          ),
         )
         return
       }
@@ -220,7 +244,7 @@ function App() {
       window.removeEventListener('pointerup', handlePointerUp)
       window.removeEventListener('pointercancel', handlePointerUp)
     }
-  }, [clampOverlay, interaction])
+  }, [clampAspectLockedOverlay, clampOverlay, interaction])
 
   const drawVideoCover = (context, video, canvasWidth, canvasHeight, digitalZoom) => {
     const videoAspect = video.videoWidth / video.videoHeight
@@ -267,7 +291,7 @@ function App() {
       await navigator.share({
         files: [file],
         title: 'FrameLens photo',
-        text: 'Captured with a reference overlay.',
+        text: 'Captured with FrameLens.',
       })
       return
     }
@@ -328,19 +352,6 @@ function App() {
       }
 
       drawVideoCover(context, video, outputWidth, outputHeight, hardwareZoom ? 1 : zoomLevel)
-
-      if (reference && referenceImageRef.current?.complete) {
-        context.save()
-        context.globalAlpha = overlayOpacity / 100
-        context.drawImage(
-          referenceImageRef.current,
-          (overlay.x / 100) * outputWidth,
-          (overlay.y / 100) * outputHeight,
-          (overlay.width / 100) * outputWidth,
-          (overlay.height / 100) * outputHeight,
-        )
-        context.restore()
-      }
 
       const blob = await new Promise((resolve, reject) => {
         canvas.toBlob(
